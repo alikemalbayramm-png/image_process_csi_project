@@ -54,15 +54,12 @@ static EventGroupHandle_t s_wifi_event_group;
 static int s_retry_num = 0;
 
 /* ---- CSI CALLBACK ----
-   IDF'de CSI buffer'ı byte (int8) olarak gelir.
-   Biz sadece seri porta CSI_DATA satırı basıyoruz.
 */
 static void wifi_csi_cb(void *ctx, wifi_csi_info_t *info)
 {
     (void)ctx;
     if (!info || !info->buf || info->len <= 0) return;
 
-    // Sadece CSI_DATA yaz
     // rssi: info->rx_ctrl.rssi
     printf("CSI_DATA,%d,[ ", info->rx_ctrl.rssi);
 
@@ -180,7 +177,7 @@ static void wifi_init_sta(void)
                                           portMAX_DELAY);
 
     if (bits & WIFI_CONNECTED_BIT) {
-        // Bağlandıktan sonra CSI aç
+       
         wifi_enable_csi();
     } else {
         ESP_LOGE(TAG, "Failed to connect to SSID:%s", EXAMPLE_ESP_WIFI_SSID);
@@ -194,9 +191,8 @@ void app_main(void)
         ESP_ERROR_CHECK(nvs_flash_erase());
         ESP_ERROR_CHECK(nvs_flash_init());
     }
-
-    // Logları azaltmak istersen:
     // esp_log_level_set("wifi", ESP_LOG_WARN);
 
     wifi_init_sta();
 }
+
